@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AccountingEntry extends Model
 {
@@ -19,14 +21,14 @@ class AccountingEntry extends Model
     /**
      * Un asiento contable pertenece a una factura.
      */
-    public function invoice() {
+    public function invoice(): BelongsTo {
         return $this->belongsTo(Invoice::class);
     }
 
     /**
      * Un asiento contable puede tener muchos movimientos contables
      */
-    public function movements(){
+    public function movements(): HasMany{
         return $this->hasMany(AccountingMovement::class);
     }
 }

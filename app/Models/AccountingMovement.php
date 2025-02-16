@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AccountingMovement extends Model
 {
@@ -14,14 +15,14 @@ class AccountingMovement extends Model
     /**
      * Un movimiento contable pertenece a un asiento contable
      */
-    public function accountingEntry() {
+    public function accountingEntry(): BelongsTo {
         return $this->belongsTo(AccountingEntry::class);
     }
 
     /**
      * Un movimiento contable pertenece a un código contable
      */
-    public function accountingCode(){
+    public function accountingCode(): belongsTo{
         return $this->belongsTo(AccountingCode::class);
     }
 }

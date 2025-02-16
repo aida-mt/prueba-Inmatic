@@ -3,15 +3,20 @@
 namespace App\Observers;
 
 use App\Models\Invoice;
+use App\Services\AccountingEntryService;
 
 class InvoiceObserver
 {
+    public function __construct(protected AccountingEntryService $accountingEntryService ) {
+    }
     /**
      * Handle the Invoice "created" event.
      */
     public function created(Invoice $invoice): void
     {
         $this->validateInvoice($invoice);
+        //Crear asiento contable después de guardar la factura
+        $this->accountingEntryService->create($invoice);
     }
 
     /**
@@ -54,11 +59,11 @@ class InvoiceObserver
      */
     private function validateInvoice(Invoice $invoice): void {
         if ($invoice->status === 'cancelled') {
-            throw new \InvalidArgumentException('No se pueden crear asientos para facturas anuladas');
+            throw new \InvalidArgumentException('Accounting entries cannot be created for canceled invoices');
         }
 
         if ($invoice->accountingEntry()->exists() || $invoice->status === 'accounted') {
-            throw new \InvalidArgumentException('Ya existe un asiento contable para esta factura');
+            throw new \InvalidArgumentException('An accounting entry already exists for this invoice');
         }
     }
 }
