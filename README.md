@@ -39,7 +39,6 @@
 11.	Tratamiento de la Aplicación como si Fuera para un Única Empresa</br>
 	•	Decisión: La prueba técnica se desarrollará bajo el supuesto de que la aplicación está destinada a una única empresa.</br>
 	•	Motivo: Dado que no se requiere la gestión de múltiples clientes o empresas para la prueba, de esta forma se simplifica el modelo de datos y la lógica de negocio.</br></br>
-    13. Uso de un Campo date para las Facturas en lugar de Timestamps
 
 13. Uso de un Campo DATE para las Facturas en lugar de Timestamps</br>
 	•	Decisión: Se ha decidido utilizar un campo date para almacenar la fecha de las facturas, en lugar de utilizar los campos timestamps.</br>
