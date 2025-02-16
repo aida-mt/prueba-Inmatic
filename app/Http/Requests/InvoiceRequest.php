@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class InvoiceRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class InvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => 'required|string|unique:invoices',
+            'number' => 'required', 'required|string|unique:invoices',
             'supplier' => 'required|string',
             'concepts' => 'required|string',
             'taxable_base' => 'required|numeric',

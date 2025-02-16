@@ -25,26 +25,25 @@ class AccountingEntryService
      * Si no hay errores, el estado del asiento se actualiza a 'registered' y el de la factura a 'accounted'.
      */
     public function create(Invoice $invoice): AccountingEntry {
-
         return DB::transaction(function () use ($invoice) {
             $accountingEntry = AccountingEntry::create([
                 'description' => $invoice->concepts,
                 'status' => AccountingEntry::STATUS_DRAFT,
                 'invoice_id' => $invoice->id
             ]);
-
             try{
                 // Crea los movimientos contables asociados al asiento
-                $this->movementService->create($accountingEntry, $invoice);
-                // Actualiza el estado del asiento a 'registered'
-                $accountingEntry->update(['status' => AccountingEntry::STATUS_REGISTERED]);
-                // Actualiza el estado de la factura a 'accounted'
-                $invoice->update(['status' => Invoice::STATUS_ACCOUNTED]);
-
+                $accountingMovements = $this->movementService->create($accountingEntry, $invoice);
+                // Si los asientpos han sido creados y el estado del asiento contable es 'draft'
+                // Actualiza el estado del asiento a 'registered' y el estado de la factura a 'accounted'
+                if ($accountingMovements && $accountingEntry->status === AccountingEntry::STATUS_DRAFT) {
+                    $accountingEntry->update(['status' => AccountingEntry::STATUS_REGISTERED]);
+                    $invoice->update(['status' => Invoice::STATUS_ACCOUNTED]);
+                }
                 return $accountingEntry;
 
             }catch(\Exception $e) {
-                throw new \RuntimeException("Error al crear los movimientos contables: ".$e->getMessage());
+                throw new \RuntimeException("Error creating accounting movements: ".$e->getMessage());
             }
         });
     }

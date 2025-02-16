@@ -24,7 +24,5 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::except([
             'api/*'
         ]);
-        // Registrar el observer
-        Invoice::observe(InvoiceObserver::class);
     }
 }

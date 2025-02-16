@@ -19,20 +19,21 @@ class AccountingMovementService
      * 2. Valida que los débitos y créditos estén equilibrados.
      * 3. Crea los movimientos contables en la base de datos.
      */
-    public function create(AccountingEntry $accountingEntry, Invoice $invoice): void {
-        DB::transaction(function () use ($accountingEntry, $invoice) {
+    public function create(AccountingEntry $accountingEntry, Invoice $invoice): array {
+        return DB::transaction(function () use ($accountingEntry, $invoice) {
             $this->movements = $this->mapInvoiceToMovements($invoice);
 
             $this->validateBalancedMovements($this->movements);
-
+            $createdMovements = [];
             foreach ($this->movements as $movement) {
-                AccountingMovement::create([
+                $createdMovements[] = AccountingMovement::create([
                     'debit' => $movement['debit'],
                     'credit' => $movement['credit'],
                     'accounting_code_id' => $this->getAccountingCodeId($movement['code']),
                     'accounting_entry_id' => $accountingEntry->id,
                 ]);
             }
+            return $createdMovements;
         });
     }
 

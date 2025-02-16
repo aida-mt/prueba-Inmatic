@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\InvoiceRequest;
+use App\Http\Requests\InvoiceManyRequest;
 use App\Http\Requests\SearchInvoiceRequest;
 use App\Models\Invoice;
 use App\Http\Resources\AccountingEntryResource;
 use App\Http\Resources\InvoiceResource;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
@@ -44,11 +46,29 @@ class InvoiceController extends Controller
     public function store(InvoiceRequest $request)
     {
         //Validar campos de la factura antes de guardarla
-        $validatedInovice = $request->validated();
-        $invoice = Invoice::create($validatedInovice);
+        $validatedInvoice = $request->validated();
+        $invoice = Invoice::create($validatedInvoice);
 
         //Response con los datos del asiento contable creado y sus movimientos
         return new AccountingEntryResource($invoice->accountingEntry);
+    }
+
+    /**
+     * Store multiple newly created invoices in storage.
+     */
+    public function bulkStore(InvoiceManyRequest $request) {
+        //Todavía en desarrollo..
+
+        //Validar las facturas antes de guardarlas
+        // $validatedInvoices = $request->validated();
+
+        // $invoices = Invoice::insert($validatedInvoices);
+
+        // Devolver las facturas creadas como un recurso
+        // return response()->json([
+        //     'message' => 'Invoices created successfully',
+        //     'total_created' => count($invoices),
+        // ], 201);
     }
 
     /**

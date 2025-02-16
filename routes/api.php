@@ -14,6 +14,15 @@ use App\Http\Controllers\InvoiceController;
 Route::get('invoices/search', [InvoiceController::class, 'search']);
 
 /**
+ * Define una ruta POST para la creación masiva de facturas.
+ * Esta ruta acepta solicitudes POST en 'api/invoices/bulk-store' y
+ * llama al método 'bulkStore' del InvoiceController para crear múltiples facturas.
+ *
+ * Ejemplo de uso:
+ * - POST /api/invoices/bulk-store con el payload de las facturas
+ */
+Route::post('invoices/bulk-store', [InvoiceController::class, 'bulkStore']);
+/**
  * Define una ruta de tipo API para los recursos 'invoices'.
  * Genera automáticamente rutas para todos los métodos CRUD del controlador InvoiceController,
  * como index, store, show, update y destroy.
