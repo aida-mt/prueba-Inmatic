@@ -70,8 +70,13 @@ class ValidInvoiceNumber implements ValidationRule
      * Validate the year part of the invoice number
      */
     private function hasValidYear(string $firstPart, Closure $fail): bool {
-        try {
             $year = (int) Str::after($firstPart, self::PREFIX);
+
+            if (!Carbon::canBeCreatedFromFormat($year, 'Y')) {
+                $fail('The year is not valid.');
+                return false;
+            }
+
             $date = Carbon::createFromFormat('Y', $year);
 
             if ($date->year > Carbon::now()->year) {
@@ -79,11 +84,12 @@ class ValidInvoiceNumber implements ValidationRule
                 return false;
             }
 
-            return $date->format('Y') === (string) $year;
-        } catch (\Exception $e) {
-            $fail('The year is not valid.');
-            return false;
-        }
+            // Verificar que el año incluido en el formato, sea igual al año en la fecha de la factura
+            $invoiceDate = Carbon::parse(request('date'));
+            if ($date->year !== $$invoiceDate->year) {
+                $fail('The year in the format must be the same as the year of the invoice.');
+                return false;
+            }
     }
 
     /**
