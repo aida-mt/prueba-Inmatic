@@ -21,12 +21,10 @@ class InvoiceManyRequest extends InvoiceRequest
      */
     public function rules(): array
     {
-        $parentRules = parent::rules();
         // Valida que sea un array y tenga al menos dos facturas
-        // Hereda las reglas de validación del request original (InvoiceRequest)
         return [
             'invoices' => ['required', 'array', 'min:2', new MissingInvoiceNumbers],
-            'invoices.*.' . key($parentRules) => $parentRules[key($parentRules)]
+            'invoices.*' => 'required|array',
         ];
     }
 }
