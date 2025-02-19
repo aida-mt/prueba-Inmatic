@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\InvoiceRequest;
+use App\Http\Requests\InvoicesRequest;
 use App\Http\Requests\InvoiceManyRequest;
 use App\Http\Requests\SearchInvoiceRequest;
 use App\Models\Invoice;
@@ -43,7 +43,7 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvoiceRequest $request)
+    public function store(InvoicesRequest $request)
     {
         //Validar campos de la factura antes de guardarla
         $validatedInvoice = $request->validated();
@@ -56,7 +56,7 @@ class InvoiceController extends Controller
     /**
      * Store multiple newly created invoices in storage.
      */
-    public function bulkStore(InvoiceManyRequest $request) {
+    public function bulkStore(InvoicesRequest $request) {
         //Todavía en desarrollo..
 
         //Validar las facturas antes de guardarlas
@@ -82,7 +82,7 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(InvoiceRequest $request, string $id)
+    public function update(InvoicesRequest $request, string $id)
     {
         //
     }

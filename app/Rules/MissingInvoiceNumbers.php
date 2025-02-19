@@ -20,12 +20,6 @@ class MissingInvoiceNumbers implements ValidationRule
     {
         //Asumiendo que las facturas siempre tienen el formato "FYYYY/XX"
 
-        // Validar que haya facturas y tengan el formato correcto
-        if (!$this->hasValidInvoices($invoices)) {
-            $fail('There are no invoices or the data is incomplete.');
-            return;
-        }
-
         // Extraer los números de factura FYYYY
         $invoiceYearString = $this->extractinvoiceYearString($invoices[0]['number']);
         // Extraer los números de factura XX
@@ -42,18 +36,6 @@ class MissingInvoiceNumbers implements ValidationRule
     }
 
     /**
-     * Validate that there are invoices.
-     */
-    private function hasValidInvoices(mixed $invoices): bool {
-        // Verificar que no haya facturas con números vacíos
-        $hasEmptyNumbers = !empty(Arr::where($invoices, function ($invoice) {
-            return !isset($invoice['number']) || empty($invoice['number']);
-        }));
-
-        return !empty($invoices) && !$hasEmptyNumbers;
-    }
-
-    /**
      * Extract the first part (FYYYY) from invoice number
      */
     private function extractinvoiceYearString(string $invoiceNumber): string {
@@ -65,7 +47,7 @@ class MissingInvoiceNumbers implements ValidationRule
      */
     private function extractInvoiceNumbers(array $invoices): array {
         return Arr::map($invoices, function ($invoice) {
-            return (int) Str::of($invoice['number'])->after(self::SEPARATOR);
+            return (int) (string) Str::of($invoice['number'])->after(self::SEPARATOR);
         });
 
         // return $validNumbers;

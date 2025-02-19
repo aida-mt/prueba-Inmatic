@@ -4,15 +4,29 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class ValidInvoiceNumber implements ValidationRule
+class ValidInvoiceNumber implements DataAwareRule, ValidationRule
 {
     protected const PREFIX = 'F';
     protected const SEPARATOR = '/';
     protected const TOTAL_PARTS = 2;
 
+    protected $data = [];
+
+    /**
+     * Set the data under validation.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function setData(array $data): static
+    {
+        $this->data = $data;
+
+        return $this;
+    }
     /**
      * Run the validation rule.
      *
@@ -22,6 +36,7 @@ class ValidInvoiceNumber implements ValidationRule
      */
     public function validate(string $attribute, mixed $invoiceNumber, Closure $fail): void
     {
+        $invoiceIndex = substr($attribute, 9, 1);
         if(!Str::contains($invoiceNumber, self::SEPARATOR) || !$this->hasValidFormat($invoiceNumber)) {
             $fail('The invoice number format must be FYYYY/XX.');
             return;
@@ -34,7 +49,7 @@ class ValidInvoiceNumber implements ValidationRule
             return;
         }
 
-        if (!$this->hasValidYear($parts[0], $fail)) {
+        if (!$this->hasValidYear($parts[0], $invoiceIndex, $fail)) {
             return;
         }
 
@@ -69,27 +84,31 @@ class ValidInvoiceNumber implements ValidationRule
     /**
      * Validate the year part of the invoice number
      */
-    private function hasValidYear(string $firstPart, Closure $fail): bool {
-            $year = (int) Str::after($firstPart, self::PREFIX);
+    private function hasValidYear(string $firstPart, string $invoiceIndex, Closure $fail): bool {
+        $year = (int) Str::after($firstPart, self::PREFIX);
 
-            if (!Carbon::canBeCreatedFromFormat($year, 'Y')) {
-                $fail('The year is not valid.');
-                return false;
-            }
+        if (!Carbon::canBeCreatedFromFormat($year, 'Y')) {
+            $fail('The year is not valid.');
+            return false;
+        }
 
-            $date = Carbon::createFromFormat('Y', $year);
+        $date = Carbon::createFromFormat('Y', $year);
 
-            if ($date->year > Carbon::now()->year) {
-                $fail('The year cannot be in the future.');
-                return false;
-            }
+        if ($date->year > Carbon::now()->year) {
+            $fail('The year cannot be in the future.');
+            return false;
+        }
 
-            // Verificar que el año incluido en el formato, sea igual al año en la fecha de la factura
-            $invoiceDate = Carbon::parse(request('date'));
-            if ($date->year !== $$invoiceDate->year) {
-                $fail('The year in the format must be the same as the year of the invoice.');
-                return false;
-            }
+        // Verificar que el año incluido en el formato, sea igual al año en la fecha de la factura
+        $invoiceDate = $this->data["invoices"][$invoiceIndex]['date'];
+        $parsedInvoiceDate = Carbon::parse($invoiceDate);
+        if ($date->year !== $parsedInvoiceDate->year) {
+            $fail('The year in the format must be the same as the year of the invoice.');
+            return false;
+        }
+
+        // If no errors:returns true
+        return true;
     }
 
     /**
