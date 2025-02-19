@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-class ValidInvoiceNumber implements DataAwareRule, ValidationRule
+class ValidInvoiceNumberPattern implements DataAwareRule, ValidationRule
 {
     protected const PREFIX = 'F';
     protected const SEPARATOR = '/';

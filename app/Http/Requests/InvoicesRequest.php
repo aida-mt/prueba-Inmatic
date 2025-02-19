@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MissingInvoiceNumbers;
-use App\Rules\ValidInvoiceNumber;
+use App\Rules\ValidInvoiceNumberPattern;
 
 class InvoicesRequest extends FormRequest
 {
@@ -23,15 +23,10 @@ class InvoicesRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** Valida:
-         * Que sea un array y tenga al menos dos facturas.
-         * Que la colleción sea correcta
-         * No falten numeros de factura.
-        */
         return [
             'invoices' => ['required', 'array', new MissingInvoiceNumbers, ],
             'invoices.*' => 'required|array',
-            'invoices.*.number' => ['required','string','unique:invoices', new ValidInvoiceNumber()],
+            'invoices.*.number' => ['required','string','unique:invoices', new ValidInvoiceNumberPattern()],
             'invoices.*.supplier' => 'required|string',
             'invoices.*.concepts' => 'required|string',
             'invoices.*.taxable_base' => 'required|numeric',
