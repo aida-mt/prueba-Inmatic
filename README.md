@@ -52,6 +52,10 @@
 	•	Decisión: Se ha decidido utilizar MissingInvoiceNumbers en InvoiceManyRequest para aplicar la validación de números de factura faltantes.</br>
 	•	Motivo: Al tratar la validación de números faltantes como una regla de validación en InvoiceManyRequest, se garantiza una validación más clara y coherente cuando se envía un lote de facturas.</br></br>
 
-14.	<b>Uso de ValidInvoiceNumber como regla de validación</b></br>
-	•	Decisión: Se ha decidido utilizar ValidInvoiceNumber como regla de validación para el formato de los números de factura.</br>
-	•	Motivo: Al centralizar esta lógica de validación en una regla dedicada, se facilita su mantenimiento. Además, permite integrar la validación directamente con el ecosistema de validación de Laravel, lo que asegura una mayor consistencia y facilidad de uso.</br></br>
+14.	<b>Uso de Reglas Personalizadas para Validaciones</b></br>
+	•	Decisión: Se ha optado por utilizar reglas de validación personalizadas, como ValidInvoiceNumber, para manejar el formato de los números de factura.</br>
+	•	Motivo: Al centralizar la lógica de validación en reglas dedicadas, se facilita su mantenimiento. Además, permite integrar estas validaciones directamente con el ecosistema de validación de Laravel, lo que asegura una mayor consistencia y facilidad de uso.</br></br>
+
+15. <b>Validación de Facturas con métodos de colección de Laravel</b></br>
+	•	Decisión: Se han usado los métodos de colección de Laravel, como pluck, filter y unique, para validar las facturas.</br>
+	•	Motivo: Son adecuados para la prueba técnica, donde no se espera un alto volumen de datos. En escenarios con más facturas, se podría optimizar con un enfoque basado en hash.</br></br>

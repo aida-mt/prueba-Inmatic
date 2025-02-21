@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\MissingInvoiceNumbers;
+use App\Rules\ValidInvoicesSequence;
+use App\Rules\NoDuplicatedInvoiceNumbers;
 use App\Rules\ValidInvoiceNumberPattern;
 
 class InvoicesRequest extends FormRequest
@@ -24,7 +26,7 @@ class InvoicesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'invoices' => ['required', 'array', new MissingInvoiceNumbers, ],
+            'invoices' => ['required', 'array', new MissingInvoiceNumbers, new ValidInvoicesSequence, new NoDuplicatedInvoiceNumbers],
             'invoices.*' => 'required|array',
             'invoices.*.number' => ['required','string','unique:invoices', new ValidInvoiceNumberPattern()],
             'invoices.*.supplier' => 'required|string',
