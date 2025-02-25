@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\InvoicesRequest;
-use App\Http\Requests\InvoiceManyRequest;
 use App\Http\Requests\SearchInvoiceRequest;
 use App\Models\Invoice;
 use App\Http\Resources\AccountingEntryResource;
 use App\Http\Resources\InvoiceResource;
+use App\Queries\InvoiceReportQueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
@@ -69,6 +69,25 @@ class InvoiceController extends Controller
         //     'message' => 'Invoices created successfully',
         //     'total_created' => count($invoices),
         // ], 201);
+    }
+
+    /**
+     * Display the summary of invoices grouped by supplier and date.
+     */
+    public function summary (InvoiceReportQueryBuilder $builder){
+        /**
+         * Esta es la forma en que se implementaría para recibir el formato dinámicamente, implementando sus respectias validaciones
+         * public function summary (Request $request){
+         * $format = $request->input('format',);
+         * $builder = new InvoiceReportQueryBuilder($format );
+         * Si no se proporciona, se usaría el valor predeterminado
+         */
+        $invoices = $builder->getPeriodicalSummaryBySupplier();
+
+        if ($invoices->isEmpty()) {
+            return response()->json(['message' => 'No data available.'], 404);
+        }
+        return response()->json(['summary' => $invoices], 200);
     }
 
     /**

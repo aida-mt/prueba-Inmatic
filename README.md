@@ -59,3 +59,7 @@
 15. <b>Validación de Facturas con métodos de colección de Laravel</b></br>
 	•	Decisión: Se han usado los métodos de colección de Laravel, como pluck, filter y unique, para validar las facturas.</br>
 	•	Motivo: Son adecuados para la prueba técnica, donde no se espera un alto volumen de datos. En escenarios con más facturas, se podría optimizar con un enfoque basado en hash.</br></br>
+
+15. <b>Consideraciones de rendimiento en validaciones</b></br>
+	•	Decisión: No optimizar las validaciones para grandes volúmenes de datos en este momento.</br>
+	•	Motivo: Las validaciones implementadas son adecuadas para los volúmenes de datos actuales y se enfocan en la claridad del código. En caso de manejar grandes volúmenes de datos, se podrían explorar optimizaciones específicas.</br></br>

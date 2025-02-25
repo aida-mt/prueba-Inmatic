@@ -12,6 +12,18 @@ use App\Http\Controllers\InvoiceController;
  * - /api/invoices/search?status=paid,draft&date_from=2025-01-01&date_to=2025-01-31
 */
 Route::get('invoices/search', [InvoiceController::class, 'search']);
+/**
+ * Define una ruta GET para obtener un resumen de factura agrupadas por proveedor y fecha.
+ * Este ruta podría recibir un parámetro "format" para permitir que el rango de fecha sea dinámico.
+ * Si no se proporciona, se utiliza el valor predeterminado definido en la clase InvoiceReportQueryBuilder.
+ *
+ * Ejemplo de uso:
+ * - /api/invoices/summary
+ *
+ * Ejemplo de ruta con el parámetro dinámico "format":
+ * - /api/invoices/summary?format=%Y
+ */
+Route::get('invoices/summary', [InvoiceController::class, 'summary']);
 
 /**
  * Define una ruta POST para la creación masiva de facturas.
